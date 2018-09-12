@@ -26,7 +26,9 @@ class MainViewController: UIViewController, FilterListViewControllerDelegate, UI
         let selectedFilter : CIFilter = CIFilter(name: selectedStr)!
  
         let ciImage : CIImage = CIImage(image: myImage!)!
-        
+        if (ciImage == nil) {
+            return;
+        }
         selectedFilter.setValue(ciImage, forKey: kCIInputImageKey)
         
         if let filteredImage : CIImage = selectedFilter.outputImage{
@@ -35,9 +37,30 @@ class MainViewController: UIViewController, FilterListViewControllerDelegate, UI
             
             let cgiImage = context.createCGImage(filteredImage, from: filteredImage.extent)
             
-            let image = UIImage(cgImage: cgiImage!, scale: UIScreen.main.scale, orientation:  myImage.imageOrientation)
+            if cgiImage != nil {
             
-            myImageView.image = image
+                let image = UIImage(cgImage: cgiImage!, scale: UIScreen.main.scale, orientation:  myImage.imageOrientation)
+                
+                myImageView.image = image
+            
+            }else{
+                let alert: UIAlertController = UIAlertController(title: "アラート表示", message: "保存してもいいですか？", preferredStyle:  UIAlertControllerStyle.alert)
+                
+                // ② Actionの設定
+                // Action初期化時にタイトル, スタイル, 押された時に実行されるハンドラを指定する
+                // 第3引数のUIAlertActionStyleでボタンのスタイルを指定する
+                // OKボタン
+                let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:{
+                    // ボタンが押された時の処理を書く（クロージャ実装）
+                    (action: UIAlertAction!) -> Void in
+                    print("OK")
+                })
+                
+                alert.addAction(defaultAction)
+                
+                // ④ Alertを表示
+                present(alert, animated: true, completion: nil)
+            }
         }
     }
     

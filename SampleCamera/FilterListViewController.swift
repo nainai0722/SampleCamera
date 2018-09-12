@@ -27,11 +27,44 @@ class FilterListViewController: UITableViewController {
                                "CISepiaTone",
                                "CIVignette",]
 
-
+    var BuildInfilterList:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        BuildInfilterList = CIFilter.filterNames(inCategory: kCICategoryBuiltIn)
+        print(BuildInfilterList)
+        
+//        CIFilter.filterNames(inCategory: kCICategoryBuiltIn)
+//            .forEach{ filterName in
+//                guard let filter = CIFilter(name: filterName) else{
+//                    return
+//                }
+//                let inputs: [String] = filter.inputKeys.map{ inputKey in
+//                    let information = filter.parameterInformation(forInputKey: inputKey)
+//                    let type = (information[kCIAttributeClass].map { "\($0)" } ?? "")
+//                    let defaultValue = information[kCIAttributeDefault]
+//                    if let value = defaultValue as? NSNumber {
+//                        return "\(inputKey): \(type) = \(value)"
+//                    } else if let value = defaultValue as? NSString {
+//                        return "\(inputKey): \(type) = \"\(value)\""
+//                    } else {
+//                        return "\(inputKey): \(type)"
+//                    }
+//                }
+//                let filterDisplayName = filter.displayName ?? filterName
+//                printer.print("")
+//                if let url = filter.referenceDocumentationUrl {
+//                    // I don't know why, but SeeAlso does not work on my Xcode.
+//                    // printer.print("/// \(filterDisplayName)")
+//                    // printer.print("/// - SeeAlso: [Reference/\(filterDisplayName)](\(url))")
+//                    printer.print("/// [\(filterDisplayName)](\(url))")
+//                } else {
+//                    printer.print("/// \(filterDisplayName)")
+//                }
+//                
+//        }
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -53,13 +86,15 @@ class FilterListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return filterList.count
+        return BuildInfilterList.count
+        
+//        return filterList.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        var filtername = filterList[indexPath.row]
+        var filtername = BuildInfilterList[indexPath.row]
         
         if filtername.isEmpty {
             filtername = "No Effect"
@@ -77,7 +112,7 @@ class FilterListViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let myDelegate = delegate {
-            myDelegate.FilterListViewController(self, didSelectFilter: self.filterList[indexPath.row], index: indexPath.row)
+            myDelegate.FilterListViewController(self, didSelectFilter: self.BuildInfilterList[indexPath.row], index: indexPath.row)
         }
         self.navigationController?.popViewController(animated: true)
     }
